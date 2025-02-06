@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.amcom.ambev.order.controller.BuyOrderControllerTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-02-06T12:34:37" hostname="ram-Inspiron-5566" time="0.741">
+  <properties/>
+  <testcase name="testGetOrdersSuccess()" classname="com.amcom.ambev.order.controller.BuyOrderControllerTest" time="0.37"/>
+  <testcase name="testGetOneOrderNotFound()" classname="com.amcom.ambev.order.controller.BuyOrderControllerTest" time="0.048"/>
+  <testcase name="testGetOrdersNotFound()" classname="com.amcom.ambev.order.controller.BuyOrderControllerTest" time="0.045"/>
+  <testcase name="testDeleteOrderSuccess()" classname="com.amcom.ambev.order.controller.BuyOrderControllerTest" time="0.035"/>
+  <testcase name="testSaveOrderConflict()" classname="com.amcom.ambev.order.controller.BuyOrderControllerTest" time="0.132"/>
+  <testcase name="testDeleteOrderNotFound()" classname="com.amcom.ambev.order.controller.BuyOrderControllerTest" time="0.028"/>
+  <testcase name="testGetOneOrderSuccess()" classname="com.amcom.ambev.order.controller.BuyOrderControllerTest" time="0.05"/>
+  <system-out><![CDATA[09:34:30.364 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.amcom.ambev.order.controller.BuyOrderControllerTest]: BuyOrderControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+09:34:30.533 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.amcom.ambev.order.OrderApplication for test class com.amcom.ambev.order.controller.BuyOrderControllerTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.2)
+
+2025-02-06T09:34:31.043-03:00  INFO 60007 --- [order] [    Test worker] c.a.a.o.c.BuyOrderControllerTest         : Starting BuyOrderControllerTest using Java 17.0.12 with PID 60007 (started by ram in /home/ram/dev/projetos/order)
+2025-02-06T09:34:31.045-03:00  INFO 60007 --- [order] [    Test worker] c.a.a.o.c.BuyOrderControllerTest         : No active profile set, falling back to 1 default profile: "default"
+2025-02-06T09:34:32.008-03:00  INFO 60007 --- [order] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-02-06T09:34:32.093-03:00  INFO 60007 --- [order] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 71 ms. Found 4 JPA repository interfaces.
+2025-02-06T09:34:32.697-03:00  INFO 60007 --- [order] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-02-06T09:34:32.893-03:00  INFO 60007 --- [order] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:test user=SA
+2025-02-06T09:34:32.896-03:00  INFO 60007 --- [order] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-02-06T09:34:32.953-03:00  INFO 60007 --- [order] [    Test worker] org.flywaydb.core.FlywayExecutor         : Database: jdbc:h2:mem:test (H2 2.3)
+2025-02-06T09:34:32.963-03:00  WARN 60007 --- [order] [    Test worker] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: H2 2.3.232 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.224.
+2025-02-06T09:34:33.006-03:00  INFO 60007 --- [order] [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
+2025-02-06T09:34:33.011-03:00  INFO 60007 --- [order] [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.022s)
+2025-02-06T09:34:33.024-03:00  INFO 60007 --- [order] [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2025-02-06T09:34:33.086-03:00  INFO 60007 --- [order] [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2025-02-06T09:34:33.103-03:00  INFO 60007 --- [order] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "0 - create"
+2025-02-06T09:34:33.146-03:00  INFO 60007 --- [order] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - init"
+2025-02-06T09:34:33.169-03:00  INFO 60007 --- [order] [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "PUBLIC", now at version v1 (execution time 00:00.032s)
+2025-02-06T09:34:33.269-03:00  INFO 60007 --- [order] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-02-06T09:34:33.324-03:00  INFO 60007 --- [order] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.5.Final
+2025-02-06T09:34:33.361-03:00  INFO 60007 --- [order] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-02-06T09:34:33.656-03:00  INFO 60007 --- [order] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-02-06T09:34:33.707-03:00  WARN 60007 --- [order] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-02-06T09:34:33.724-03:00  INFO 60007 --- [order] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-02-06T09:34:34.803-03:00  INFO 60007 --- [order] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-02-06T09:34:34.871-03:00  INFO 60007 --- [order] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-02-06T09:34:35.209-03:00  INFO 60007 --- [order] [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-02-06T09:34:36.590-03:00  WARN 60007 --- [order] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-02-06T09:34:37.054-03:00  INFO 60007 --- [order] [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-consoles'. Database available at 'jdbc:h2:mem:test'
+2025-02-06T09:34:37.127-03:00  INFO 60007 --- [order] [    Test worker] c.a.a.o.c.BuyOrderControllerTest         : Started BuyOrderControllerTest in 6.423 seconds (process running for 7.64)
+2025-02-06T09:34:37.940-03:00  INFO 60007 --- [order] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-02-06T09:34:37.941-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-02-06T09:34:37.944-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2025-02-06T09:34:38.047-03:00  INFO 60007 --- [order] [    Test worker] c.a.a.o.controller.BuyOrderController    : state=init-find-orders , status=null , customer-name=John Doe, customer-email=john.doe@example.com , customer-document=123456789
+2025-02-06T09:34:38.053-03:00  INFO 60007 --- [order] [    Test worker] c.a.a.o.controller.BuyOrderController    : state=end-success-find-orders , status=null, customer-name=John Doe, customer-email=john.doe@example.com , customer-document=123456789
+2025-02-06T09:34:38.244-03:00  INFO 60007 --- [order] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-02-06T09:34:38.245-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-02-06T09:34:38.245-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-02-06T09:34:38.293-03:00  INFO 60007 --- [order] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-02-06T09:34:38.294-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-02-06T09:34:38.294-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-02-06T09:34:38.302-03:00  INFO 60007 --- [order] [    Test worker] c.a.a.o.controller.BuyOrderController    : state=init-find-orders , status=null , customer-name=John Doe, customer-email=john.doe@example.com , customer-document=123456789
+2025-02-06T09:34:38.343-03:00  INFO 60007 --- [order] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-02-06T09:34:38.343-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-02-06T09:34:38.344-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-02-06T09:34:38.346-03:00  INFO 60007 --- [order] [    Test worker] c.a.a.o.controller.BuyOrderController    : state=init-delete-order , number=1
+2025-02-06T09:34:38.348-03:00  INFO 60007 --- [order] [    Test worker] c.a.a.o.controller.BuyOrderController    : state=end-success-delete-order, order-number=1
+2025-02-06T09:34:38.381-03:00  INFO 60007 --- [order] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-02-06T09:34:38.381-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-02-06T09:34:38.382-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2025-02-06T09:34:38.486-03:00  INFO 60007 --- [order] [    Test worker] c.a.a.o.controller.BuyOrderController    : state=init-create-order , order-number=1, customer-document=123456789
+2025-02-06T09:34:38.514-03:00  INFO 60007 --- [order] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-02-06T09:34:38.515-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-02-06T09:34:38.515-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-02-06T09:34:38.517-03:00  INFO 60007 --- [order] [    Test worker] c.a.a.o.controller.BuyOrderController    : state=init-delete-order , number=1
+2025-02-06T09:34:38.546-03:00  INFO 60007 --- [order] [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2025-02-06T09:34:38.546-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-02-06T09:34:38.546-03:00  INFO 60007 --- [order] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
