@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 @Builder
 public record ItemDTO(@NotBlank String productCode,
-                      @NotNull @Min(value = 1) int amount,
+                      @NotNull @Min(value = 1) Integer amount,
                       @NotNull BigDecimal fullDiscount) implements Serializable {
 
 }

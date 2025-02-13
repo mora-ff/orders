@@ -17,8 +17,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -32,7 +32,7 @@ public class BuyOrderServiceImpl implements BuyOrderService {
 
     @Transactional
     @Override
-    public BuyOrder saveWithItems(BigInteger orderNumber, List<ItemDTO> items, String customerDocument) {
+    public BuyOrder saveWithItems(BigInteger orderNumber, Set<ItemDTO> items, String customerDocument) {
 
         Customer customer = customerService.findByDocument(customerDocument).orElseThrow(IllegalArgumentException::new);
 
@@ -61,7 +61,7 @@ public class BuyOrderServiceImpl implements BuyOrderService {
 
     @Transactional
     @Override
-    public BuyOrder updateWithItems(BigInteger orderNumber, List<ItemDTO> items, BuyOrderStatus status) {
+    public BuyOrder updateWithItems(BigInteger orderNumber, Set<ItemDTO> items, BuyOrderStatus status) {
 
         BuyOrder order = this.findByNumber(orderNumber).orElseThrow(IllegalArgumentException::new);
         order.setStatus(status);
@@ -72,11 +72,9 @@ public class BuyOrderServiceImpl implements BuyOrderService {
             var product = productService.findByCode(item.productCode()).orElseThrow(IllegalArgumentException::new);
             var newItem = Item.builder()
                     .amount(item.amount())
-                    .order(order)
                     .product(product)
                     .unitPrice(product.getPrice())
                     .fullDiscount(item.fullDiscount())
-                    .createDate(LocalDateTime.now(ZoneId.of("UTC")))
                     .updateDate(LocalDateTime.now(ZoneId.of("UTC")))
                     .build();
             order.addItem(newItem);
@@ -96,18 +94,15 @@ public class BuyOrderServiceImpl implements BuyOrderService {
     }
 
     @Override
-    public List<BuyOrder> findBuyOrders(BuyOrderDTO order) {
-       List<BuyOrder> orders = orderRepository.findByFilters(order.status(),
+    public Set<BuyOrder> findBuyOrders(BuyOrderDTO order) {
+       Set<BuyOrder> orders = orderRepository.findByFilters(order.status(),
                 order.customer().name(),
                 order.customer().email(),
                 order.customer().document());
 
         orders.forEach(o -> o.setTotalPrice(this.calculatePriceOrder(o.getItens())));
 
-        return orderRepository.findByFilters(order.status(),
-                                             order.customer().name(),
-                                             order.customer().email(),
-                                             order.customer().document());
+        return orders;
     }
 
     @Override
@@ -117,7 +112,7 @@ public class BuyOrderServiceImpl implements BuyOrderService {
     }
 
     @Override
-    public BigDecimal calculatePriceOrder(List<Item> items) {
+    public BigDecimal calculatePriceOrder(Set<Item> items) {
         BigDecimal totalPrice = BigDecimal.ZERO;
         for(Item item : items) {
             totalPrice = totalPrice.add(item.getUnitPrice().multiply(BigDecimal.valueOf(item.getAmount())).subtract(item.getFullDiscount()));

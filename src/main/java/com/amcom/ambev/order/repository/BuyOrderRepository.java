@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public interface BuyOrderRepository extends JpaRepository<BuyOrder, UUID> {
@@ -17,10 +17,11 @@ public interface BuyOrderRepository extends JpaRepository<BuyOrder, UUID> {
             + "(:name IS NULL OR c.name ILIKE %:name%) AND "
             + "(:email IS NULL OR c.email ILIKE %:email%) AND "
             + "(:document IS NULL OR c.document = :document)")
-    List<BuyOrder> findByFilters(@Param("status") BuyOrderStatus status,
-                                 @Param("name") String name,
-                                 @Param("email") String email,
-                                 @Param("document") String document);
+    Set<BuyOrder> findByFilters(@Param("status") BuyOrderStatus status,
+                                @Param("name") String name,
+                                @Param("email") String email,
+                                @Param("document") String document);
 
     Optional<BuyOrder> findByNumber(BigInteger number);
+
 }

@@ -12,6 +12,7 @@ import lombok.Data;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Data
@@ -38,10 +39,34 @@ public class Customer implements Serializable {
 
     private String phoneNumber;
 
+    @JsonIgnore
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime createDate;
 
+    @JsonIgnore
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime updateDate;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return Objects.equals(document, customer.document);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(document);
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "document='" + document + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
 
 }

@@ -12,11 +12,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Optional;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import java.util.Set;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @SpringBootTest
 public class BuyOrderControllerTest {
@@ -58,7 +65,7 @@ public class BuyOrderControllerTest {
 
         mockMvc.perform(get("/orders/{number}", 1))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Pedido não encontrado."));
+                .andExpect(content().string("Order not found."));
 
         verify(orderService, times(1)).findByNumber(BigInteger.valueOf(1));
     }
@@ -68,7 +75,7 @@ public class BuyOrderControllerTest {
         BuyOrder order = new BuyOrder();
         order.setNumber(BigInteger.valueOf(1));
 
-        when(orderService.findBuyOrders(any())).thenReturn(List.of(order));
+        when(orderService.findBuyOrders(any())).thenReturn(Set.of(order));
 
         mockMvc.perform(get("/orders")
                         .param("customerDocument", "123456789")
@@ -82,7 +89,7 @@ public class BuyOrderControllerTest {
 
     @Test
     public void testGetOrdersNotFound() throws Exception {
-        when(orderService.findBuyOrders(any())).thenReturn(List.of());
+        when(orderService.findBuyOrders(any())).thenReturn(Set.of());
 
         mockMvc.perform(get("/orders")
                         .param("customerDocument", "123456789")
@@ -107,7 +114,7 @@ public class BuyOrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("[]"))
                 .andExpect(status().isConflict())
-                .andExpect(content().string("Pedido já cadastrado."));
+                .andExpect(content().string("Order already registered."));
 
         verify(orderService, times(1)).findByNumber(BigInteger.valueOf(1));
     }
@@ -132,8 +139,9 @@ public class BuyOrderControllerTest {
 
         mockMvc.perform(delete("/orders/{number}", 1))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Pedido não encontrado."));
+                .andExpect(content().string("Order not found."));
 
         verify(orderService, times(1)).findByNumber(BigInteger.valueOf(1));
     }
+
 }

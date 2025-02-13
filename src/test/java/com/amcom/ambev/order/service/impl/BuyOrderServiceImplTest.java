@@ -1,6 +1,9 @@
 package com.amcom.ambev.order.service.impl;
 
-import com.amcom.ambev.order.model.*;
+import com.amcom.ambev.order.model.Product;
+import com.amcom.ambev.order.model.BuyOrder;
+import com.amcom.ambev.order.model.Customer;
+import com.amcom.ambev.order.model.Item;
 import com.amcom.ambev.order.model.dto.ItemDTO;
 import com.amcom.ambev.order.model.enumeration.BuyOrderStatus;
 import com.amcom.ambev.order.repository.BuyOrderRepository;
@@ -12,16 +15,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import java.util.Set;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
 class BuyOrderServiceImplTest {
@@ -69,7 +74,7 @@ class BuyOrderServiceImplTest {
         when(productService.findByCode("P123")).thenReturn(Optional.of(product));
         when(orderRepository.save(any(BuyOrder.class))).thenReturn(buyOrder);
 
-        BuyOrder result = buyOrderService.saveWithItems(BigInteger.ONE, List.of(itemDTO), "123456789");
+        BuyOrder result = buyOrderService.saveWithItems(BigInteger.ONE, Set.of(itemDTO), "123456789");
 
         assertNotNull(result);
         assertEquals(BigInteger.ONE, result.getNumber());
@@ -83,7 +88,7 @@ class BuyOrderServiceImplTest {
         when(productService.findByCode("P123")).thenReturn(Optional.of(product));
         when(orderRepository.save(any(BuyOrder.class))).thenReturn(buyOrder);
 
-        BuyOrder result = buyOrderService.updateWithItems(BigInteger.ONE, List.of(itemDTO), BuyOrderStatus.ORDER_SENT);
+        BuyOrder result = buyOrderService.updateWithItems(BigInteger.ONE, Set.of(itemDTO), BuyOrderStatus.ORDER_SENT);
 
         assertNotNull(result);
         assertEquals(BuyOrderStatus.ORDER_SENT, result.getStatus());
@@ -94,10 +99,10 @@ class BuyOrderServiceImplTest {
     void findByNumberShouldReturnOrderWhenExists() {
         when(orderRepository.findByNumber(BigInteger.ONE)).thenReturn(Optional.of(buyOrder));
 
-        Optional<BuyOrder> result = buyOrderService.findByNumber(BigInteger.ONE);
+        Optional<BuyOrder> order = buyOrderService.findByNumber(BigInteger.ONE);
 
-        assertTrue(result.isPresent());
-        assertEquals(BigInteger.ONE, result.get().getNumber());
+        assertEquals(buyOrder, order.get());
+        assertEquals(BigInteger.ONE, order.get().getNumber());
     }
 
     @Test
@@ -118,8 +123,9 @@ class BuyOrderServiceImplTest {
                 .fullDiscount(BigDecimal.valueOf(10))
                 .build();
 
-        BigDecimal totalPrice = buyOrderService.calculatePriceOrder(List.of(item));
+        BigDecimal totalPrice = buyOrderService.calculatePriceOrder(Set.of(item));
 
         assertEquals(BigDecimal.valueOf(190), totalPrice);
     }
+
 }

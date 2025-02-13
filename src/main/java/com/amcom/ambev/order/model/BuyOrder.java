@@ -4,7 +4,17 @@ import com.amcom.ambev.order.model.enumeration.BuyOrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.*;
+import jakarta.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +25,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Objects;
 
 @Data
 @Builder
@@ -47,12 +58,15 @@ public class BuyOrder implements Serializable {
     private BuyOrderStatus status;
 
     @Builder.Default
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Item> itens = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "BUY_ORDER_ID", nullable = false)
+    private Set<Item> itens = new HashSet<>();
 
+    @JsonIgnore
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime createDate;
 
+    @JsonIgnore
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime updateDate;
 
@@ -61,7 +75,30 @@ public class BuyOrder implements Serializable {
 
     public void addItem(Item item) {
         itens.add(item);
-        item.setOrder(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        BuyOrder buyOrder = (BuyOrder) o;
+        return Objects.equals(customer, buyOrder.customer)
+                && status == buyOrder.status
+                && Objects.equals(itens, buyOrder.itens);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(customer, status, itens);
+    }
+
+    @Override
+    public String toString() {
+        return "BuyOrder{" +
+                "number=" + number +
+                ", customer=" + customer +
+                ", status=" + status +
+                ", itens=" + itens +
+                '}';
     }
 
 }

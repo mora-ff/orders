@@ -12,11 +12,20 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.HashSet;
 
 @RestController
 @Tag(name="Orders API" , description = "Orders and products manager")
@@ -32,11 +41,11 @@ public class BuyOrderController {
     public ResponseEntity<Object> getOneOrder(@PathVariable(value = "number") BigInteger orderNumber) {
         Optional<BuyOrder> orderSearch = orderService.findByNumber(orderNumber);
         orderSearch.ifPresent(buyOrder -> buyOrder.setTotalPrice(orderService.calculatePriceOrder(orderNumber)));
-        return orderSearch.<ResponseEntity<Object>>map(order -> ResponseEntity.status(HttpStatus.OK).body(order)).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não encontrado."));
+        return orderSearch.<ResponseEntity<Object>>map(order -> ResponseEntity.status(HttpStatus.OK).body(order)).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found."));
     }
 
     @GetMapping
-    public ResponseEntity<List<BuyOrder>> getOrders(
+    public ResponseEntity<Set<BuyOrder>> getOrders(
             @RequestParam String customerDocument,
             @RequestParam(required = false) String customerName,
             @RequestParam(required = false) String customerEmail,
@@ -48,17 +57,17 @@ public class BuyOrderController {
         BuyOrderDTO order = BuyOrderDTO.builder().customer(customer).status(orderStatus).build();
 
         try {
-            List<BuyOrder> orders = orderService.findBuyOrders(order);
+            Set<BuyOrder> orders = orderService.findBuyOrders(order);
 
             if (orders.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HashSet<>());
             }
             log.info("state=end-success-find-orders , status={}, customer-name={}, customer-email={} , customer-document={}", orderStatus, customerName, customerEmail, customerDocument);
 
             return ResponseEntity.ok(orders);
         } catch (Exception e) {
             log.error("state=error-find-orders, status={}, customer-name={}, customer-email={} , customer-document={}", orderStatus, customerName, customerEmail, customerDocument , e);
-            return ResponseEntity.internalServerError().body(new ArrayList<>());
+            return ResponseEntity.internalServerError().body(new HashSet<>());
         }
 
     }
@@ -66,13 +75,13 @@ public class BuyOrderController {
     @PostMapping
     public ResponseEntity<Object> saveOrder(@RequestParam BigInteger orderNumber,
                                             @RequestParam String customerDocument,
-                                            @Valid @RequestBody List<ItemDTO> orderItems) {
+                                            @Valid @RequestBody Set<ItemDTO> orderItems) {
 
         log.info("state=init-create-order , order-number={}, customer-document={}", orderNumber, customerDocument);
         try {
             Optional<BuyOrder> order = orderService.findByNumber(orderNumber);
             if (order.isPresent()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Pedido já cadastrado.");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Order already registered.");
             }
 
             var newOrder = orderService.saveWithItems(orderNumber , orderItems, customerDocument);
@@ -82,20 +91,20 @@ public class BuyOrderController {
             return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
         } catch (Exception e) {
             log.error("state=error-create-order, order-number={}, customer-document={}", orderNumber, customerDocument, e);
-            return ResponseEntity.internalServerError().body("Um erro interno ocorreu");
+            return ResponseEntity.internalServerError().body("Internal server error occurred.");
         }
     }
 
     @PutMapping("/{number}")
     public ResponseEntity<Object> updateOrder(@PathVariable(value = "number") BigInteger orderNumber,
                                               @RequestParam BuyOrderStatus orderStatus,
-                                              @RequestBody List<ItemDTO> orderItems) {
+                                              @RequestBody Set<ItemDTO> orderItems) {
 
         log.info("state=init-update-order , order-number={}", orderNumber);
         try {
             Optional<BuyOrder> order = orderService.findByNumber(orderNumber);
             if(order.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não encontrado.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found.");
             }
 
             var updatedOrder = orderService.updateWithItems(order.get().getNumber(), orderItems, orderStatus);
@@ -105,7 +114,7 @@ public class BuyOrderController {
             return ResponseEntity.status(HttpStatus.OK).body(updatedOrder);
         } catch (Exception e) {
             log.error("state=error-update-order, order-number={}", orderNumber , e);
-            return ResponseEntity.internalServerError().body("Um erro interno ocorreu");
+            return ResponseEntity.internalServerError().body("Internal server error occurred.");
         }
     }
 
@@ -116,7 +125,7 @@ public class BuyOrderController {
         try {
             Optional<BuyOrder> order = orderService.findByNumber(orderNumber);
             if(order.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não encontrado.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found.");
             }
 
             orderService.delete(order.get());
@@ -124,7 +133,7 @@ public class BuyOrderController {
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             log.error("state=error-delete-order, order-number={}", orderNumber, e);
-            return ResponseEntity.internalServerError().body("Um erro interno ocorreu");
+            return ResponseEntity.internalServerError().body("Internal server error occurred.");
         }
     }
 

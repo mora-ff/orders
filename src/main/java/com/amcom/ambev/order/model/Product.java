@@ -13,6 +13,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Data
@@ -37,10 +38,32 @@ public class Product implements Serializable {
     @NotNull
     private BigDecimal price;
 
+    @JsonIgnore
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime createDate;
 
+    @JsonIgnore
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime updateDate;
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(code, product.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(code);
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "price=" + price +
+                ", description='" + description + '\'' +
+                ", code='" + code + '\'' +
+                '}';
+    }
 }

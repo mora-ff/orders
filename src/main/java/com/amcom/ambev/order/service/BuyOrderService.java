@@ -7,23 +7,23 @@ import com.amcom.ambev.order.model.dto.ItemDTO;
 import com.amcom.ambev.order.model.enumeration.BuyOrderStatus;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface BuyOrderService {
 
-    BuyOrder saveWithItems(BigInteger orderNumber, List<ItemDTO> items, String customerDocument);
+    BuyOrder saveWithItems(BigInteger orderNumber, Set<ItemDTO> items, String customerDocument);
 
-    BuyOrder updateWithItems(BigInteger orderNumber, List<ItemDTO> items, BuyOrderStatus status);
+    BuyOrder updateWithItems(BigInteger orderNumber, Set<ItemDTO> items, BuyOrderStatus status);
 
     Optional<BuyOrder> findByNumber(BigInteger number);
 
     void delete(BuyOrder order);
 
-    List<BuyOrder> findBuyOrders(BuyOrderDTO order);
+    Set<BuyOrder> findBuyOrders(BuyOrderDTO order);
 
     BigDecimal calculatePriceOrder(BigInteger orderNumber);
 
-    BigDecimal calculatePriceOrder(List<Item> items);
+    BigDecimal calculatePriceOrder(Set<Item> items);
 
 }
